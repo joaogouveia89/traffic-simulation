@@ -45,5 +45,21 @@ To run this project, after built it, run:
 ./traffic_simulation
 ```
 
+## 🤝 Thanks to
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="#">
+        <img src="https://avatars3.githubusercontent.com/u/31936044" width="100px;" alt="Iuri' picture Silva no GitHub"/><br>
+        <sub>
+          <b>[Iuri Silva](https://github.com/iuricode)(this readme template)</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+
 
 [⬆ Back to top](#traffic-simulation)<br>
