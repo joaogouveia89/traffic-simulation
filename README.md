@@ -50,12 +50,10 @@ To run this project, after built it, run:
 <table>
   <tr>
     <td align="center">
-      <a href="#">
         <img src="https://avatars3.githubusercontent.com/u/31936044" width="100px;" alt="Iuri' picture Silva no GitHub"/><br>
         <sub>
-          <b>[Iuri Silva](https://github.com/iuricode) for this awesome readme template</b>
+            <b>[Iuri Silva](https://github.com/iuricode) for this awesome readme template</b>
         </sub>
-      </a>
     </td>
   </tr>
 </table>
