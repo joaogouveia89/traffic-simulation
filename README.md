@@ -52,7 +52,7 @@ To run this project, after built it, run:
     <td align="center">
         <img src="https://avatars3.githubusercontent.com/u/31936044" width="100px;" alt="Iuri' picture Silva no GitHub"/><br>
         <sub>
-            <b>[Iuri Silva](https://github.com/iuricode) for this awesome readme template</b>
+            <b>[Iuri Silva] for this awesome readme template</b>
         </sub>
     </td>
   </tr>
@@ -61,3 +61,5 @@ To run this project, after built it, run:
 
 
 [⬆ Back to top](#traffic-simulation)<br>
+
+[Iuri Silva]: <http://angularjs.org>
