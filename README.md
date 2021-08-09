@@ -62,4 +62,6 @@ To run this project, after built it, run:
 
 [⬆ Back to top](#traffic-simulation)<br>
 
-[Iuri Silva]: <http://angularjs.org>
+[//]:
+
+[Iuri Silva]: <https://github.com/iuricode>
