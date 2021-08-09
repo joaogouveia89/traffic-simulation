@@ -50,9 +50,9 @@ To run this project, after built it, run:
 <table>
   <tr>
     <td align="center">
-        <img src="https://avatars3.githubusercontent.com/u/31936044" width="100px;" alt="Iuri' picture Silva no GitHub"/><br>
+        <img src="https://avatars3.githubusercontent.com/u/31936044" width="100px;" alt="Iuri' picture Silva GitHub"/><br>
         <sub>
-            <b>[Iuri Silva] for this awesome readme template</b>
+          <a href="https://www.github.com/iuricode/" target="_blank">Iuri Silva</a> - for this awesome README template
         </sub>
     </td>
   </tr>
@@ -61,7 +61,3 @@ To run this project, after built it, run:
 
 
 [⬆ Back to top](#traffic-simulation)<br>
-
-[//]:
-
-[Iuri Silva]: <https://github.com/iuricode>
