@@ -4,7 +4,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/joaogouveia89/traffic-simulation?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/joaogouveia89/traffic-simulation?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/iuricode/joaogouveia89/traffic-simulation?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/joaogouveia89/traffic-simulation?style=for-the-badge)
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/joaogouveia89/traffic-simulation?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/joaogouveia89/traffic-simulation?style=for-the-badge)
 
@@ -16,11 +16,9 @@
 
 This project is not finished yet, The completed tasks are checked below:
 
-- [x] Task 1
-- [x] Task 2
-- [x] Task 3
-- [ ] Task 4
-- [ ] Task 5
+- [ ] Task L1.1 
+- [ ] Task L1.2
+- [ ] Task L1.3
 
 ## 💻 Requirements
 
@@ -34,9 +32,6 @@ To build this project run:
 
 ```
 mkdir build && cd build
-```
-
-```
 cmake ..
 make
 ```
