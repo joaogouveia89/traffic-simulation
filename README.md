@@ -21,7 +21,7 @@ This project is not finished yet, The completed tasks are checked below:
 - [x] Task L1.3
 - [x] Task L2.1
 - [x] Task L2.2
-- [ ] Task L2.3
+- [x] Task L2.3
 
 ## 💻 Requirements
 

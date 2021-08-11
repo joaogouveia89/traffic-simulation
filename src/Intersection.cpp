@@ -26,13 +26,20 @@ void WaitingVehicles::permitEntryToFirstInQueue()
     // L2.3 : First, get the entries from the front of _promises and _vehicles. 
     // Then, fulfill promise and send signal back that permission to enter has been granted.
     // Finally, remove the front elements from both queues. 
+    std::shared_ptr<Vehicle> vehicle = _vehicles[0];
+    std::promise<void> &nextPromise = _promises[0];
+    
+    nextPromise.set_value();
+
+    _vehicles.erase(_vehicles.begin());
+    _promises.erase(_promises.begin());
 }
 
 /* Implementation of class "Intersection" */
 
 Intersection::Intersection()
 {
-    _type = ObjectType::objectIntersection;
+    _type = ObjectType::objectIntersection; 
     _isBlocked = false;
 }
 
