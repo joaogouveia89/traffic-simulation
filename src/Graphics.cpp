@@ -66,7 +66,10 @@ void Graphics::drawTrafficObjects()
     float opacity = 0.85;
     cv::addWeighted(_images.at(1), opacity, _images.at(0), 1.0 - opacity, 0, _images.at(2));
 
+    // TODO: to fit my personal laptop screen, comment below line before deliver
+    cv::resize(_images.at(2), _images.at(2), cv::Size(), 0.50, 0.50);
     // display background and overlay image
+    
     cv::imshow(_windowName, _images.at(2));
     cv::waitKey(33);
 }
