@@ -1,10 +1,9 @@
 #ifndef TRAFFIC_LIGHT_H
 #define TRAFFIC_LIGHT_H
 #include "TrafficObject.h"
+#include "Helper.h"
 #include <thread>
 #include <chrono>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
 
 enum class TrafficLightPhase{
     red,
