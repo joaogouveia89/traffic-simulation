@@ -32,8 +32,9 @@ void Vehicle::simulate()
 void Vehicle::drive()
 {
     // print id of the current thread
+    TrafficObject::_mtxCout.lock();
     std::cout << "Vehicle #" << _id << "::drive: thread id = " << std::this_thread::get_id() << std::endl;
-
+    TrafficObject::_mtxCout.unlock();
     // initalize variables
     bool hasEnteredIntersection = false;
     double cycleDuration = 1; // duration of a single simulation cycle in ms

@@ -4,6 +4,7 @@
 
 // init static variable
 int TrafficObject::_idCnt = 0;
+std::timed_mutex TrafficObject::_mtxCout;
 
 void TrafficObject::setPosition(double x, double y)
 {

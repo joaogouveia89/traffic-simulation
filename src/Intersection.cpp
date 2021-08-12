@@ -73,8 +73,9 @@ std::vector<std::shared_ptr<Street>> Intersection::queryStreets(std::shared_ptr<
 // adds a new vehicle to the queue and returns once the vehicle is allowed to enter
 void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
 {
+    TrafficObject::_mtxCout.lock();
     std::cout << "Intersection #" << _id << "::addVehicleToQueue: thread id = " << std::this_thread::get_id() << std::endl;
-
+    TrafficObject::_mtxCout.unlock();
     // L2.2 : First, add the new vehicle to the waiting line by creating a promise, a corresponding future and then adding both to _waitingVehicles. 
     // Then, wait until the vehicle has been granted entry. 
 
@@ -84,7 +85,9 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
     
     vehicleFuture.wait();
 
+    TrafficObject::_mtxCout.lock();
     std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;
+    TrafficObject::_mtxCout.unlock();
 }
 
 void Intersection::vehicleHasLeft(std::shared_ptr<Vehicle> vehicle)
