@@ -8,8 +8,8 @@ void TrafficLight::simulate(){
     
 }
 
-TrafficLightPhase TrafficLight::getCurrentPhase(){
-    
+TrafficLightPhase TrafficLight::getCurrentPhase() const{
+    return _currentPhase;
 }
 
 void TrafficLight::cycleThroughPhases(){

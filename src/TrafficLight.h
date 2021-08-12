@@ -20,7 +20,7 @@ public:
 
     void waitForGreen();
     void simulate();
-    TrafficLightPhase getCurrentPhase();
+    TrafficLightPhase getCurrentPhase() const;
 };
 
 #endif
