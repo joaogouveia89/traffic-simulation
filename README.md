@@ -1,68 +1,39 @@
-# Traffic Simulation
+# CPPND: Program a Concurrent Traffic Simulation
 
-<!---Esses são exemplos. Veja https://shields.io para outras pessoas ou para personalizar este conjunto de escudos. Você pode querer incluir dependências, status do projeto e informações de licença aqui--->
+<img src="data/traffic_simulation.gif"/>
 
-![GitHub repo size](https://img.shields.io/github/repo-size/joaogouveia89/traffic-simulation?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/joaogouveia89/traffic-simulation?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/joaogouveia89/traffic-simulation?style=for-the-badge)
-![Bitbucket open issues](https://img.shields.io/bitbucket/issues/joaogouveia89/traffic-simulation?style=for-the-badge)
-![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/joaogouveia89/traffic-simulation?style=for-the-badge)
+This is the project for the fourth course in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213): Concurrency. 
 
-<img src="data/app-image.png" alt="app-image">
+Throughout the Concurrency course, you have been developing a traffic simulation in which vehicles are moving along streets and are crossing intersections. However, with increasing traffic in the city, traffic lights are needed for road safety. Each intersection will therefore be equipped with a traffic light. In this project, you will build a suitable and thread-safe communication protocol between vehicles and intersections to complete the simulation. Use your knowledge of concurrent programming (such as mutexes, locks and message queues) to implement the traffic lights and integrate them properly in the code base.
 
-> Nanodegree Traffic Simulation project to explore the usage of threads in C++. Each vehicle here is a thread and the idea is to synchronize them to not let vehicles crash
+## Dependencies for Running Locally
+* cmake >= 2.8
+  * All OSes: [click here for installation instructions](https://cmake.org/install/)
+* make >= 4.1 (Linux, Mac), 3.81 (Windows)
+  * Linux: make is installed by default on most Linux distros
+  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
+  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
+* OpenCV >= 4.1
+  * The OpenCV 4.1.0 source code can be found [here](https://github.com/opencv/opencv/tree/4.1.0)
+* gcc/g++ >= 5.4
+  * Linux: gcc / g++ is installed by default on most Linux distros
+  * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
+  * Windows: recommend using [MinGW](http://www.mingw.org/)
 
-### Adjusts and improvements
+## Basic Build Instructions
 
-This project is not finished yet, The completed tasks are checked below:
+1. Clone this repo.
+2. Make a build directory in the top level directory: `mkdir build && cd build`
+3. Compile: `cmake .. && make`
+4. Run it: `./traffic_simulation`.
 
-- [x] Task L1.1 
-- [x] Task L1.2
-- [x] Task L1.3
-- [x] Task L2.1
-- [x] Task L2.2
-- [x] Task L2.3
-- [x] Task L3.1
-- [x] Task L3.2
-- [x] Task L3.3
+## Project Tasks
 
-## 💻 Requirements
+When the project is built initially, all traffic lights will be green. When you are finished with the project, your traffic simulation should run with red lights controlling traffic, just as in the .gif file above. See the classroom instruction and code comments for more details on each of these parts. 
 
-* Linux
-* OpenCV2
-
-## 🚀 Building this project
-
-To build this project run:
-
-```
-mkdir build && cd build
-cmake ..
-make
-```
-
-
-## ☕ Running this project
-
-To run this project, after built it, run:
-
-```
-./traffic_simulation
-```
-
-## 🤝 Thanks to
-
-<table>
-  <tr>
-    <td align="center">
-        <img src="https://avatars3.githubusercontent.com/u/31936044" width="100px;" alt="Iuri' picture Silva GitHub"/><br>
-        <sub>
-          <a href="https://www.github.com/iuricode/" target="_blank">Iuri Silva</a> - for this awesome README template
-        </sub>
-    </td>
-  </tr>
-</table>
-
-
-
-[⬆ Back to top](#traffic-simulation)<br>
+- **Task FP.1** : Define a class `TrafficLight` which is a child class of `TrafficObject`. The class shall have the public methods `void waitForGreen()` and `void simulate()` as well as `TrafficLightPhase getCurrentPhase()`, where `TrafficLightPhase` is an enum that can be either `red` or `green`. Also, add the private method `void cycleThroughPhases()`. Furthermore, there shall be the private member `_currentPhase` which can take `red` or `green` as its value.
+- **Task FP.2** : Implement the function with an infinite loop that measures the time between two loop cycles and toggles the current phase of the traffic light between red and green and sends an update method to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. Also, the while-loop should use `std::this_thread::sleep_`for to wait 1ms between two cycles. Finally, the private method `cycleThroughPhases` should be started in a thread when the public method `simulate` is called. To do this, use the thread queue in the base class.
+- **Task FP.3** : Define a class `MessageQueue` which has the public methods send and receive. Send should take an rvalue reference of type TrafficLightPhase whereas receive should return this type. Also, the class should define an `std::dequeue` called `_queue`, which stores objects of type `TrafficLightPhase`. Finally, there should be an `std::condition_variable` as well as an `std::mutex` as private members.
+- **Task FP.4** : Implement the method `Send`, which should use the mechanisms `std::lock_guard<std::mutex>` as well as `_condition.notify_one()` to add a new message to the queue and afterwards send a notification. Also, in class `TrafficLight`, create a private member of type `MessageQueue` for messages of type `TrafficLightPhase` and use it within the infinite loop to push each new `TrafficLightPhase` into it by calling send in conjunction with move semantics.
+- **Task FP.5** : The method receive should use `std::unique_lock<std::mutex>` and `_condition.wait()` to wait for and receive new messages and pull them from the queue using move semantics. The received object should then be returned by the receive function. Then, add the implementation of the method `waitForGreen`, in which an infinite while-loop runs and repeatedly calls the `receive` function on the message queue. Once it receives `TrafficLightPhase::green`, the method returns.
+- **Task FP.6** : In class Intersection, add a private member `_trafficLight` of type `TrafficLight`. In method `Intersection::simulate()`, start the simulation of `_trafficLight`. Then, in method `Intersection::addVehicleToQueue`, use the methods `TrafficLight::getCurrentPhase` and `TrafficLight::waitForGreen` to block the execution until the traffic light turns green.
