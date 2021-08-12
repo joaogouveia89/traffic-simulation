@@ -17,7 +17,11 @@ TrafficLightPhase TrafficLight::getCurrentPhase() const{
 }
 
 void TrafficLight::cycleThroughPhases(){
-    
+    while(true){
+        generateCurrentCycleTime();
+        std::this_thread::sleep_for(std::chrono::seconds(_currentCycleTimeSec));
+        InvertLight();
+    }
 }
 
 void TrafficLight::generateCurrentCycleTime(){
@@ -27,4 +31,12 @@ void TrafficLight::generateCurrentCycleTime(){
     }else if(_currentCycleTimeSec < CYCLE_TIME_FLOOR_LIMIT){
         _currentCycleTimeSec = CYCLE_TIME_FLOOR_LIMIT;
     }
+}
+
+void TrafficLight::InvertLight(){
+    if(_currentPhase == TrafficLightPhase::red){
+        _currentPhase = TrafficLightPhase::green;
+        return;
+    }
+    _currentPhase = TrafficLightPhase::red;
 }

@@ -1,6 +1,8 @@
 #ifndef TRAFFIC_LIGHT_H
 #define TRAFFIC_LIGHT_H
 #include "TrafficObject.h"
+#include <thread>
+#include <chrono>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
@@ -13,6 +15,7 @@ class TrafficLight: public TrafficObject
 {
 private:
     void cycleThroughPhases();
+    void InvertLight();
     TrafficLightPhase _currentPhase { TrafficLightPhase::red }; /* arbitrary choose */
     int _currentCycleTimeSec;
     const int CYCLE_TIME_TOP_LIMIT = 6;
