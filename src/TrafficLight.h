@@ -19,7 +19,7 @@ private:
     TrafficLightPhase _currentPhase { TrafficLightPhase::red }; /* arbitrary choose */
     int _currentCycleTimeSec;
     const int CYCLE_TIME_TOP_LIMIT = 6;
-    const int CYCLE_TIME_FLOOR_LIMIT = 6;
+    const int CYCLE_TIME_FLOOR_LIMIT = 4;
 
 public:
     TrafficLight();
