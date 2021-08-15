@@ -9,7 +9,8 @@ void TrafficLight::waitForGreen(){
 }
 
 void TrafficLight::simulate(){
-    
+    std::thread lightSimulation(&::TrafficLight::cycleThroughPhases, this);
+    _threads.emplace_back(std::move(lightSimulation));
 }
 
 TrafficLightPhase TrafficLight::getCurrentPhase() const{
@@ -21,6 +22,8 @@ void TrafficLight::cycleThroughPhases(){
         generateCurrentCycleTime();
         std::this_thread::sleep_for(std::chrono::seconds(_currentCycleTimeSec));
         InvertLight();
+        // TODO send update method to message queue(FP4)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
