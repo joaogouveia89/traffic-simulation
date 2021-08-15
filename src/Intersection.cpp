@@ -12,16 +12,15 @@
 
 int WaitingVehicles::getSize()
 {
+    std::lock_guard<std::mutex> lock(interMtx);
     return _vehicles.size();
 }
 
 void WaitingVehicles::pushBack(std::shared_ptr<Vehicle> vehicle, std::promise<void> &&promise)
 {
-    std::lock(interMtx1, interMtx2);
-    std::lock_guard<std::mutex> lock1(interMtx1, std::adopt_lock);
+    std::lock_guard<std::mutex> lock1(interMtx);
     _vehicles.push_back(vehicle);
     _promises.push_back(std::move(promise));
-    std::lock_guard<std::mutex> lock2(interMtx2, std::adopt_lock);
 }
 
 void WaitingVehicles::permitEntryToFirstInQueue()
@@ -29,9 +28,8 @@ void WaitingVehicles::permitEntryToFirstInQueue()
     // L2.3 : First, get the entries from the front of _promises and _vehicles. 
     // Then, fulfill promise and send signal back that permission to enter has been granted.
     // Finally, remove the front elements from both queues.
-    std::lock(interMtx1, interMtx2);
 
-    std::lock_guard<std::mutex> lock2(interMtx2, std::adopt_lock);
+    std::lock_guard<std::mutex> lock2(interMtx);
     std::shared_ptr<Vehicle> vehicle = _vehicles[0];
     std::promise<void> &nextPromise = _promises[0];
     
@@ -39,7 +37,6 @@ void WaitingVehicles::permitEntryToFirstInQueue()
 
     _vehicles.erase(_vehicles.begin());
     _promises.erase(_promises.begin());
-    std::lock_guard<std::mutex> lock1(interMtx1, std::adopt_lock);
 }
 
 /* Implementation of class "Intersection" */
@@ -82,9 +79,11 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
     std::promise<void> vehiclePromise;
     std::future<void> vehicleFuture = vehiclePromise.get_future();
     _waitingVehicles.pushBack(vehicle, std::move(vehiclePromise));
-    _trafficLight.waitForGreen();
+    
+    if(_trafficLight.getCurrentPhase() == TrafficLightPhase::red){
+        _trafficLight.waitForGreen();
+    }
     vehicleFuture.wait();
-
     TrafficObject::_mtxCout.lock();
     std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;
     TrafficObject::_mtxCout.unlock();
