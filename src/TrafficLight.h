@@ -18,7 +18,7 @@ template <class T>
 class MessageQueue
 {
 public:
-    void Send(T& phase);
+    void Send(T&& phase);
     T& Receive();
 private:
     std::deque<T> _queue;
@@ -35,6 +35,7 @@ private:
     int _currentCycleTimeSec;
     std::condition_variable _condition;
     std::mutex _mutex;
+    MessageQueue<TrafficLightPhase> _phaseQueue;
     static constexpr int CYCLE_TIME_TOP_LIMIT = 6; //no need to define this in runtime, put the constexpr to define in compile time
     static constexpr int CYCLE_TIME_FLOOR_LIMIT = 4; //no need to define this in runtime, put the constexpr to define in compile time
 

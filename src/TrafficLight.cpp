@@ -22,7 +22,8 @@ void TrafficLight::cycleThroughPhases(){
         generateCurrentCycleTime();
         std::this_thread::sleep_for(std::chrono::seconds(_currentCycleTimeSec));
         InvertLight();
-        // TODO send update method to message queue(FP4)
+        TrafficLightPhase newPhase = _currentPhase; // to not lose the reference of current phase when calling move semantics
+        _phaseQueue.Send(std::move(newPhase));
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
@@ -42,4 +43,11 @@ void TrafficLight::InvertLight(){
         return;
     }
     _currentPhase = TrafficLightPhase::red;
+}
+
+template <class T>
+void MessageQueue<T>::Send(T&& phase){
+    std::lock_guard<std::mutex> uLock(_mutex);
+    _queue.emplace_back(std::move(phase));
+    _condition.notify_one();
 }
