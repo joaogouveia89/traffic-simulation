@@ -82,7 +82,7 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
     std::promise<void> vehiclePromise;
     std::future<void> vehicleFuture = vehiclePromise.get_future();
     _waitingVehicles.pushBack(vehicle, std::move(vehiclePromise));
-    
+    _trafficLight.waitForGreen();
     vehicleFuture.wait();
 
     TrafficObject::_mtxCout.lock();
@@ -106,7 +106,8 @@ void Intersection::setIsBlocked(bool isBlocked)
 
 // virtual function which is executed in a thread
 void Intersection::simulate() // using threads + promises/futures + exceptions
-{
+{   
+    _trafficLight.simulate();
     // launch vehicle queue processing in a thread
     _threads.emplace_back(std::thread(&Intersection::processVehicleQueue, this));
 }
@@ -132,4 +133,8 @@ void Intersection::processVehicleQueue()
             _waitingVehicles.permitEntryToFirstInQueue();
         }
     }
+}
+
+bool Intersection::trafficLightIsGreen(){
+    return _trafficLight.getCurrentPhase() == TrafficLightPhase::green;
 }

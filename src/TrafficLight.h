@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <chrono>
 #include <random>
+#include <sstream>
 
 enum class TrafficLightPhase{
     red,
@@ -39,12 +40,12 @@ private:
 
 public:
     TrafficLight();
-    ~TrafficLight();
 
     void generateCurrentCycleTime();
     void waitForGreen();
     void simulate();
     TrafficLightPhase getCurrentPhase() const;
+    std::string ToString() const;
 };
 
 #endif
