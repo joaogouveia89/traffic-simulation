@@ -30,13 +30,13 @@ void WaitingVehicles::permitEntryToFirstInQueue()
     // Finally, remove the front elements from both queues.
 
     std::lock_guard<std::mutex> lock2(interMtx);
-    std::shared_ptr<Vehicle> vehicle = _vehicles[0];
-    std::promise<void> &nextPromise = _promises[0];
+    auto vehicle = _vehicles.begin();
+    auto nextPromise = std::move(_promises.begin());
     
-    nextPromise.set_value();
+    nextPromise->set_value();
 
-    _vehicles.erase(_vehicles.begin());
-    _promises.erase(_promises.begin());
+    _vehicles.erase(vehicle);
+    _promises.erase(nextPromise);
 }
 
 /* Implementation of class "Intersection" */
@@ -70,6 +70,9 @@ std::vector<std::shared_ptr<Street>> Intersection::queryStreets(std::shared_ptr<
 // adds a new vehicle to the queue and returns once the vehicle is allowed to enter
 void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
 {
+    if(!trafficLightIsGreen()){
+        _trafficLight.waitForGreen();
+    }
     TrafficObject::_mtxCout.lock();
     std::cout << "Intersection #" << _id << "::addVehicleToQueue: thread id = " << std::this_thread::get_id() << std::endl;
     TrafficObject::_mtxCout.unlock();
@@ -80,9 +83,6 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
     std::future<void> vehicleFuture = vehiclePromise.get_future();
     _waitingVehicles.pushBack(vehicle, std::move(vehiclePromise));
     
-    if(_trafficLight.getCurrentPhase() == TrafficLightPhase::red){
-        _trafficLight.waitForGreen();
-    }
     vehicleFuture.wait();
     TrafficObject::_mtxCout.lock();
     std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;

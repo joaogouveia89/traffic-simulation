@@ -21,6 +21,7 @@ class MessageQueue
 public:
     void Send(T&& phase);
     T Receive();
+    void PopBack();
 private:
     std::deque<T> _queue;
     std::condition_variable _condition;

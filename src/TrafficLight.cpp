@@ -1,4 +1,5 @@
 #include "TrafficLight.h"
+#include <iostream>
 
 TrafficLight::TrafficLight(){
     std::srand(Helper::GenerateSeedForRand());
@@ -15,6 +16,7 @@ TrafficLightPhase TrafficLight::getCurrentPhase() const{
 
 void TrafficLight::cycleThroughPhases(){
     while(true){
+        _phaseQueue.PopBack();
         generateCurrentCycleTime();
         std::this_thread::sleep_for(std::chrono::seconds(_currentCycleTimeSec));
         InvertLight();
@@ -42,9 +44,8 @@ void TrafficLight::InvertLight(){
 }
 
 void TrafficLight::waitForGreen(){
-    TrafficLightPhase receivedPhase = TrafficLightPhase::red;
-    while(receivedPhase == TrafficLightPhase::red){ /* instead of a infite loop I pool the receive method to check if the phase is red */
-        receivedPhase = _phaseQueue.Receive();
+    while(true){ 
+        if(_phaseQueue.Receive() == TrafficLightPhase::green) return;
     }
 }
 
@@ -62,4 +63,10 @@ T MessageQueue<T>::Receive(){
     T item = std::move(_queue.front());
     _queue.pop_front();
     return item;
+}
+
+template <class T>
+void MessageQueue<T>::PopBack(){
+    std::unique_lock<std::mutex> uLock(_mutex);
+    while(!_queue.empty()) _queue.pop_back();
 }
