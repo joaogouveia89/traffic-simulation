@@ -4,10 +4,6 @@ TrafficLight::TrafficLight(){
     std::srand(Helper::GenerateSeedForRand());
 }
 
-void TrafficLight::waitForGreen(){
-
-}
-
 void TrafficLight::simulate(){
     std::thread lightSimulation(&::TrafficLight::cycleThroughPhases, this);
     _threads.emplace_back(std::move(lightSimulation));
@@ -45,9 +41,25 @@ void TrafficLight::InvertLight(){
     _currentPhase = TrafficLightPhase::red;
 }
 
+void TrafficLight::waitForGreen(){
+    TrafficLightPhase receivedPhase = TrafficLightPhase::red;
+    while(receivedPhase == TrafficLightPhase::red){ /* instead of a infite loop I pool the receive method to check if the phase is red */
+        receivedPhase = _phaseQueue.Receive();
+    }
+}
+
 template <class T>
 void MessageQueue<T>::Send(T&& phase){
     std::lock_guard<std::mutex> uLock(_mutex);
     _queue.emplace_back(std::move(phase));
     _condition.notify_one();
+}
+
+template <class T>
+T MessageQueue<T>::Receive(){
+     std::unique_lock<std::mutex> uLock(_mutex);
+    _condition.wait(uLock, [this] { return !_queue.empty(); }); 
+    T item = std::move(_queue.front());
+    _queue.pop_front();
+    return item;
 }
