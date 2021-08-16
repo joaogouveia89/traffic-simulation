@@ -34,9 +34,11 @@ private:
     void cycleThroughPhases();
     void InvertLight();
     TrafficLightPhase _currentPhase { TrafficLightPhase::red }; /* arbitrary choose */
-    int _currentCycleTimeSec;
+    int _currentCycleTimeMili { 0 };
     MessageQueue<TrafficLightPhase> _phaseQueue;    
     TrafficLightPhaseTime phaseTime { 4000, 6000 };
+    std::chrono::steady_clock::time_point lastMeasuredTime { std::chrono::steady_clock::now() };
+    bool HasElapsedCycleTime();
 public:
     void generateCurrentCycleTime();
     void waitForGreen();

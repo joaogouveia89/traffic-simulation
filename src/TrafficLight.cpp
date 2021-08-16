@@ -12,13 +12,15 @@ TrafficLightPhase TrafficLight::getCurrentPhase() const{
 
 void TrafficLight::cycleThroughPhases(){
     while(true){
+        if(!HasElapsedCycleTime()){
+            continue;
+        }
         _phaseQueue.PopBack();
         //randomly chose of current cycle period
-        _currentCycleTimeSec = phaseTime.Get();
-        std::this_thread::sleep_for(std::chrono::milliseconds(_currentCycleTimeSec));
         InvertLight();
         TrafficLightPhase newPhase = _currentPhase; // to not lose the reference of current phase when calling move semantics
         _phaseQueue.Send(std::move(newPhase));
+        _currentCycleTimeMili = phaseTime.Get();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
@@ -35,6 +37,16 @@ void TrafficLight::waitForGreen(){
     while(true){ 
         if(_phaseQueue.Receive() == TrafficLightPhase::green) return;
     }
+}
+
+bool TrafficLight::HasElapsedCycleTime(){
+    std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+    int difference = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastMeasuredTime).count();
+    if(difference >= _currentCycleTimeMili){
+        lastMeasuredTime = currentTime;
+        return true;
+    }
+    return false;
 }
 
 template <class T>
