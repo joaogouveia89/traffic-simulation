@@ -18,8 +18,7 @@ void TrafficLight::cycleThroughPhases(){
         _phaseQueue.PopBack();
         //randomly chose of current cycle period
         InvertLight();
-        TrafficLightPhase newPhase = _currentPhase; // to not lose the reference of current phase when calling move semantics
-        _phaseQueue.Send(std::move(newPhase));
+        _phaseQueue.Send(std::move(_currentPhase));
         _currentCycleTimeMili = phaseTime.Get();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
