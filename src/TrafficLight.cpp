@@ -1,10 +1,6 @@
 #include "TrafficLight.h"
 #include <iostream>
 
-TrafficLight::TrafficLight(){
-    std::srand(Helper::GenerateSeedForRand());
-}
-
 void TrafficLight::simulate(){
     std::thread lightSimulation(&::TrafficLight::cycleThroughPhases, this);
     _threads.emplace_back(std::move(lightSimulation));
@@ -17,21 +13,13 @@ TrafficLightPhase TrafficLight::getCurrentPhase() const{
 void TrafficLight::cycleThroughPhases(){
     while(true){
         _phaseQueue.PopBack();
-        generateCurrentCycleTime();
-        std::this_thread::sleep_for(std::chrono::seconds(_currentCycleTimeSec));
+        //randomly chose of current cycle period
+        _currentCycleTimeSec = phaseTime.Get();
+        std::this_thread::sleep_for(std::chrono::milliseconds(_currentCycleTimeSec));
         InvertLight();
         TrafficLightPhase newPhase = _currentPhase; // to not lose the reference of current phase when calling move semantics
         _phaseQueue.Send(std::move(newPhase));
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
-}
-
-void TrafficLight::generateCurrentCycleTime(){
-    _currentCycleTimeSec = std::rand() % 10;
-    if(_currentCycleTimeSec > CYCLE_TIME_TOP_LIMIT){
-        _currentCycleTimeSec = CYCLE_TIME_TOP_LIMIT;
-    }else if(_currentCycleTimeSec < CYCLE_TIME_FLOOR_LIMIT){
-        _currentCycleTimeSec = CYCLE_TIME_FLOOR_LIMIT;
     }
 }
 
