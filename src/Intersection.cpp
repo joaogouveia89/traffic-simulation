@@ -70,9 +70,12 @@ std::vector<std::shared_ptr<Street>> Intersection::queryStreets(std::shared_ptr<
 // adds a new vehicle to the queue and returns once the vehicle is allowed to enter
 void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
 {
+    std::lock_guard<std::mutex> uLock(_mutex);
+
     if(!trafficLightIsGreen()){
         _trafficLight.waitForGreen();
     }
+
     TrafficObject::_mtxCout.lock();
     std::cout << "Intersection #" << _id << "::addVehicleToQueue: thread id = " << std::this_thread::get_id() << std::endl;
     TrafficObject::_mtxCout.unlock();
